@@ -34,8 +34,8 @@ namespace Sudoku
                 {
                     cell.RemovePossibility(board.Board[i, j].Value);  // if found an equal value in the same box, remove it from the possible values list
                 }
+                }
             }
-        }
 
         // Remove unpossible values from each cell on the board
         public static void removeValuesFromCells(SudokuBoard board)
