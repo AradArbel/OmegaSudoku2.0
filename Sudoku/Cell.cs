@@ -52,7 +52,7 @@ namespace Sudoku
             get { return this.col; }
         }
 
-        // Get Value for this cell into a Sudoku board (-1 if value is unknown)
+        // Get Value for this cell into a Sudoku board (0 if value is unknown)
         public int Value
         {
             get
@@ -61,7 +61,7 @@ namespace Sudoku
                 {
                     return this.value;
                 }
-                return -1;
+                return 0;
             }
         }
         // Has this cell a valid value?

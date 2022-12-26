@@ -10,7 +10,7 @@ namespace Sudoku
     public class SudokuSolver
     {
         //Check whether value is already exist in col or not
-        bool isExistInCol(SudokuCell cell, SudokuBoard board, int num)
+        public static bool isExistInCol(SudokuCell cell, SudokuBoard board, int num)
         {
             int col = cell.Col;
             for (int row = 0; row < Constants.boardRange; row++)
@@ -20,7 +20,7 @@ namespace Sudoku
         }
 
         //Check whether value is already exist in row or not
-        bool isExistInRow(SudokuCell cell, SudokuBoard board, int num)
+        public static bool isExistInRow(SudokuCell cell, SudokuBoard board, int num)
         {
             int row = cell.Row;
             for (int col = 0; col < Constants.boardRange; col++)
@@ -30,7 +30,7 @@ namespace Sudoku
         }
 
         //Check whether value is already exist in box or not
-        bool isExistInBox(int boxStartRow, int boxStartCol, SudokuBoard board, int num)
+        public static bool isExistInBox(int boxStartRow, int boxStartCol, SudokuBoard board, int num)
         {
             for (int row = 0; row < Constants.boxRange; row++)
                 for (int col = 0; col < Constants.boxRange; col++)
@@ -40,7 +40,7 @@ namespace Sudoku
         }
 
         //get empty location and update row and column
-        bool findEmptyPlace(SudokuBoard board)
+        public static bool findEmptyPlace(SudokuBoard board)
         {
             int row, col;
             for (row = 0; row < Constants.boardRange; row++)
@@ -51,7 +51,7 @@ namespace Sudoku
         }
 
         //Check if item is not found in col, row and current box
-        bool isValidPlace(SudokuCell cell, SudokuBoard board, int num)
+        public static bool isValidPlace(SudokuCell cell, SudokuBoard board, int num)
         {
 
             return !isExistInRow(cell, board, num)
@@ -60,7 +60,7 @@ namespace Sudoku
         }
 
         // Solve the sudoku in recursive backtracking method
-        bool solveSudoku(SudokuBoard board, int row, int col)
+        public static bool solveSudoku(SudokuBoard board, int row, int col)
         {
             if (!findEmptyPlace(board))
                 return true; //when all places are filled
