@@ -12,7 +12,7 @@ namespace Sudoku
         private SudokuCell[,] board;
 
        /// Constructor for this class.
-        public SudokuBoard()
+        public SudokuBoard(string boardData)
         {
             this.board = new SudokuCell[Constants.maxCellValue, Constants.maxCellValue];
             // Initialize the Sudoku table
@@ -21,6 +21,7 @@ namespace Sudoku
                 for (int col = 0; col < Constants.maxCellValue; col++)
                 {
                     this.board[row, col] = new SudokuCell(row, col);
+                    this.board[row, col].SetValue(boardData[row* Constants.maxCellValue + col]-'0');
                 }
 
             }
@@ -29,5 +30,19 @@ namespace Sudoku
         /// Get sudoku board
         public SudokuCell[,] Board
         { get { return this.board; } }
+
+        /// Print board
+        public void PrintBoard()
+        {
+            for (int row = 0; row < Constants.maxCellValue; row++)
+            {
+                for (int col = 0; col < Constants.maxCellValue; col++)
+                {
+                    Console.Write(board[row, col].Value + " ");
+                }
+                Console.WriteLine("");    
+            }
+        }
+
     }
 }
