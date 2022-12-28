@@ -80,10 +80,12 @@ namespace Sudoku
         public static bool solveSudoku(SudokuBoard board, int row, int col)
         {
             // First scan all board and remove values from possible values list of ever cell that we know already that cant be in that specific cell 
-            CrookAlgorithm.removeValuesFromCells(board);
+            CrookAlgorithm.RemoveValuesFromCells(board);
 
+            // Then sets all unique cell value
+            CrookAlgorithm.UniqueCells(board);
 
-            // Then use backTracking algorithem in recursive way
+            // After that use backTracking algorithem in recursive way
             if (board.IsFull())
                 return true; //when all places are filled
             foreach (SudokuCell cell in board.Board)

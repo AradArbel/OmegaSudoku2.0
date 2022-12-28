@@ -12,7 +12,7 @@ namespace Sudoku
     static class CrookAlgorithm
     {
         // Remove values that are already used in the row, column, and block
-        static void removeUnpossibleValues(SudokuCell cell, SudokuBoard board)
+        static void RemoveUnpossibleValues(SudokuCell cell, SudokuBoard board)
         {
             int row = cell.Row;
             int col = cell.Col;
@@ -38,16 +38,25 @@ namespace Sudoku
             }
 
         // Remove unpossible values from each cell on the board
-        public static void removeValuesFromCells(SudokuBoard board)
+        public static void RemoveValuesFromCells(SudokuBoard board)
         {
             foreach(SudokuCell sudokuCell in board.Board)
             {
-                removeUnpossibleValues(sudokuCell, board);
+                RemoveUnpossibleValues(sudokuCell, board);
             }
+        }
+
+        // Check if there are any unique cells (cell that only have one possible value from the beginning) in the board. if found update their value
+        public static void UniqueCells(SudokuBoard board)
+        {
+            foreach (SudokuCell sudokuCell in board.Board)
+                if (sudokuCell.PossibleValues.Count == 1 )
+                    sudokuCell.SetValue(value: sudokuCell.PossibleValues[0]);
+
         }
 
 
 
     }
-    
+
 }

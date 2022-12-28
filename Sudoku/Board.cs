@@ -64,7 +64,7 @@ namespace Sudoku
             {
                 for (int col = 0; col < Constants.maxCellValue; col++)
                 {
-                    Console.Write(board[row, col].Value + " ");
+                    Console.Write(this.board[row, col].Value.ToString() + " ");
                 }
                 Console.WriteLine("");    
             }

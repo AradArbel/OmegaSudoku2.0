@@ -64,7 +64,7 @@ namespace Sudoku
         // Get Value for this cell into a Sudoku board (0 if value is unknown)
         public int Value
         {
-            get{ return (int)this.value;}
+            get{ return (int)this.value;}    
         }
 
         // Get and set for possible values list for this cell
@@ -89,20 +89,6 @@ namespace Sudoku
             get { return (int)this.value >= Constants.minCellValue && (int) this.value <= Constants.maxCellValue; }
         }
 
-        // Sets a value for this cell.
-        public void SetValue(int value)
-        {
-            if (this.IsValid)
-            {
-                throw new ApplicationException(
-                    string.Format("Already has been set a value for cell at [{0}, {1}].",
-                    this.row + 1, this.col + 1));
-            }
-
-            this.IsVaildValue(value);
-            this.value = value;
-        }
-
         // Checks if the specified value is valid for a cell.
         private bool IsVaildValue(int value)
         {
@@ -113,5 +99,23 @@ namespace Sudoku
             return true;
 
         }
+
+        // Sets a value for this cell.
+        public void SetValue(Object value)
+        {
+            /*if (this.IsValid)
+            {
+                throw new ApplicationException(
+                    string.Format("Already has been set a value for cell at [{0}, {1}].",
+                    this.row + 1, this.col + 1));
+            }
+            */
+
+            if (IsVaildValue((int)value))
+                this.value = value;
+            //todo add not vaild value exception
+        }
+
+        
     }
 }
