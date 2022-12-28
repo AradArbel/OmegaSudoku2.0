@@ -21,22 +21,31 @@ namespace Sudoku
         private int box;
 
         // Value for this cell into a Sudoku board.
-        private int value;
+        private object value;
 
         // possible values for this cell.
         private ArrayList possibleValues;
 
         //Constructor for this class.
-        public SudokuCell(int row, int col)
+        public SudokuCell(int row, int col,object value)
         {
             this.row = row;
             this.col = col;
-            this.value = 0;
+            this.value = value;
             this.possibleValues = new ArrayList();
-            // initialize all possible values in the beginning
-            for (int possible = Constants.minCellValue; possible <= Constants.maxCellValue; possible++)
+
+            // check if the cell is empty or already have constant value 
+            if ((int)value == 0)
             {
-                possibleValues.Add(possible);
+                // initialize all possible values in the beginning
+                for (int possible = Constants.minCellValue; possible <= Constants.maxCellValue; possible++)
+                {
+                    possibleValues.Add(possible);
+                }
+            }
+            else // mean that this cell have constant value. add this single value to possible values list
+            {
+                possibleValues.Add((int)value);
             }
         }
 
@@ -55,7 +64,7 @@ namespace Sudoku
         // Get Value for this cell into a Sudoku board (0 if value is unknown)
         public int Value
         {
-            get{ return this.value;}
+            get{ return (int)this.value;}
         }
 
         // Get and set for possible values list for this cell
@@ -77,7 +86,7 @@ namespace Sudoku
         // Has this cell a valid value?
         public bool IsValid
         {
-            get { return (this.value >= Constants.minCellValue && this.value <= Constants.maxCellValue); }
+            get { return (int)this.value >= Constants.minCellValue && (int) this.value <= Constants.maxCellValue; }
         }
 
         // Sets a value for this cell.

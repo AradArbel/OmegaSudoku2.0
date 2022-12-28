@@ -22,8 +22,7 @@ namespace Sudoku
                 {
                     for (int col = 0; col < Constants.maxCellValue; col++)
                     {
-                        this.board[row, col] = new SudokuCell(row, col);
-                        this.board[row, col].SetValue(boardData[row * Constants.maxCellValue + col] - '0');
+                        this.board[row, col] = new SudokuCell(row, col, (int)boardData[(row * Constants.maxCellValue) + col] - '0');
                     }
 
                 }
