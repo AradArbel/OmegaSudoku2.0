@@ -14,17 +14,24 @@ namespace Sudoku
        /// Constructor for this class.
         public SudokuBoard(string boardData)
         {
-            this.board = new SudokuCell[Constants.maxCellValue, Constants.maxCellValue];
-            // Initialize the Sudoku table
-            for (int row = 0; row < Constants.maxCellValue; row++)
+            if (IsLegalBoard(boardData))
             {
-                for (int col = 0; col < Constants.maxCellValue; col++)
+                this.board = new SudokuCell[Constants.maxCellValue, Constants.maxCellValue];
+                // Initialize the Sudoku table
+                for (int row = 0; row < Constants.maxCellValue; row++)
                 {
-                    this.board[row, col] = new SudokuCell(row, col);
-                    this.board[row, col].SetValue(boardData[row* Constants.maxCellValue + col]-'0');
-                }
+                    for (int col = 0; col < Constants.maxCellValue; col++)
+                    {
+                        this.board[row, col] = new SudokuCell(row, col);
+                        this.board[row, col].SetValue(boardData[row * Constants.maxCellValue + col] - '0');
+                    }
 
+                }
             }
+             // todo add try catch notLegalStringException
+           
+
+            
         }
 
         /// Get sudoku board
@@ -41,7 +48,17 @@ namespace Sudoku
             return false;
         }
 
-        /// Print board
+        // Check legal string of the board output
+        private bool IsLegalBoard(String boardData)
+        {
+            // Check for every char in the string if it is in the legal items list. if not return false.
+            foreach (char value in boardData)
+                if (!Constants.Legal_Items.Contains(value))
+                    return false;
+            return true;
+        }
+
+        // Print board
         public void PrintBoard()
         {
             for (int row = 0; row < Constants.maxCellValue; row++)
