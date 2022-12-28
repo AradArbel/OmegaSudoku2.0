@@ -31,6 +31,16 @@ namespace Sudoku
         public SudokuCell[,] Board
         { get { return this.board; } }
 
+        // Check if the board is full (None 0 values)
+        public bool IsFull()
+        {
+            for (int row = 0; row < Constants.boardRange; row++)
+                for (int col = 0; col < Constants.boardRange; col++)
+                    if (this.Board[row, col].Value == 0) //marked with 0 is empty
+                        return true;
+            return false;
+        }
+
         /// Print board
         public void PrintBoard()
         {

@@ -55,43 +55,29 @@ namespace Sudoku
         // Get Value for this cell into a Sudoku board (0 if value is unknown)
         public int Value
         {
-            get
-            {
-                if (this.IsValid)
-                {
-                    return this.value;
-                }
-                return 0;
-            }
-        }
-        // Has this cell a valid value?
-        public bool IsValid
-        {
-            get { return (this.value >= Constants.minCellValue && this.value <= Constants.maxCellValue); }
+            get{ return this.value;}
         }
 
-        // Randomly picks a possible value for this cell
-        public int PickRandomPossibility()
+        // Get and set for possible values list for this cell
+        public ArrayList PossibleValues
         {
-            if (possibleValues.Count == 0)
-            {
-                return -1;
-            }
-
-            Random rnd = new Random(DateTime.Now.Millisecond);
-            int index = rnd.Next(possibleValues.Count);
-            return (int)possibleValues[index];
-
+            get { return this.possibleValues;}
+            set { this.possibleValues = value; }
         }
 
         // Removes a value from the list of possible values.
         public void RemovePossibility(int value)
         {
-            this.IsVaildValue(value);
             if (this.possibleValues.Contains(value))
             {
                 this.possibleValues.Remove(value);
             }
+        }
+
+        // Has this cell a valid value?
+        public bool IsValid
+        {
+            get { return (this.value >= Constants.minCellValue && this.value <= Constants.maxCellValue); }
         }
 
         // Sets a value for this cell.
