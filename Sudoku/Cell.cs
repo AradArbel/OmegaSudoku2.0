@@ -11,31 +11,23 @@ namespace Sudoku
     // Representation of a cell in a Sudoku board 
     public class SudokuCell
     {
-        // Row for this cell into a Sudoku board.
-        private int row;
-
-        //Column for this cell into a Sudoku board.
-        private int col;
-
-        //box for this cell into a Sudoku board.
-        private int box;
-
-        // Value for this cell into a Sudoku board.
-        private object value;
 
         // possible values for this cell.
-        private ArrayList possibleValues;
+        private List<int> possibleValues;
 
         //Constructor for this class.
-        public SudokuCell(int row, int col,object value)
+        public SudokuCell(int row, int col,int value)
         {
-            this.row = row;
-            this.col = col;
-            this.value = value;
-            this.possibleValues = new ArrayList();
+            //Row for this cell into a Sudoku board.
+            Row = row;
+            //Column for this cell into a Sudoku board.
+            Col = col;
+            //Value for this cell into a Sudoku board.
+            Value = value;
 
+            possibleValues = new List<int>();
             // check if the cell is empty or already have constant value 
-            if ((int)value == 0)
+            if (value == 0)
             {
                 // initialize all possible values in the beginning
                 for (int possible = Constants.minCellValue; possible <= Constants.maxCellValue; possible++)
@@ -43,32 +35,23 @@ namespace Sudoku
                     possibleValues.Add(possible);
                 }
             }
-            else // mean that this cell have constant value. add this single value to possible values list
-            {
-                possibleValues.Add((int)value);
-            }
+            //else // mean that this cell have constant value. add this single value to possible values list
+            //{
+            //   possibleValues.Add(value);
+            //}
         }
 
         // Get row for this cell into a Sudoku board.
-        public int Row
-        {
-            get { return this.row; }
-        }
+        public int Row { get; }
 
         // Get column for this cell into a Sudoku board.
-        public int Col
-        {
-            get { return this.col; }
-        }
+        public int Col { get; }
 
-        // Get Value for this cell into a Sudoku board (0 if value is unknown)
-        public int Value
-        {
-            get{ return (int)this.value;}
-        }
+        // Get and set Value for this cell into a Sudoku board (0 if value is unknown)
+        public int Value { get; set; }
 
         // Get and set for possible values list for this cell
-        public ArrayList PossibleValues
+        public List<int> PossibleValues
         {
             get { return this.possibleValues;}
             set { this.possibleValues = value; }
@@ -77,19 +60,17 @@ namespace Sudoku
         // Removes a value from the list of possible values.
         public void RemovePossibility(int value)
         {
-            if (this.possibleValues.Contains(value))
-            {
-                this.possibleValues.Remove(value);
-            }
+            this.possibleValues.Remove(value);
         }
 
         // Has this cell a valid value?
         public bool IsValid
         {
-            get { return (int)this.value >= Constants.minCellValue && (int) this.value <= Constants.maxCellValue; }
+            get { return this.Value >= Constants.minCellValue && this.Value <= Constants.maxCellValue; }
         }
 
         // Sets a value for this cell.
+        /*
         public void SetValue(int value)
         {
             if (this.IsValid)
@@ -98,20 +79,13 @@ namespace Sudoku
                     string.Format("Already has been set a value for cell at [{0}, {1}].",
                     this.row + 1, this.col + 1));
             }
+            
 
-            this.IsVaildValue(value);
-            this.value = value;
+            if (IsVaildValue(value))
+                this.value = value;
+            //todo add not vaild value exception
         }
+        */
 
-        // Checks if the specified value is valid for a cell.
-        private bool IsVaildValue(int value)
-        {
-            if (!possibleValues.Contains(value))
-            {
-                return false;
-            }
-            return true;
-
-        }
     }
 }

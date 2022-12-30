@@ -14,6 +14,7 @@ namespace Sudoku
        /// Constructor for this class.
         public SudokuBoard(string boardData)
         {
+            // check if the string that been put is legal
             if (IsLegalBoard(boardData))
             {
                 this.board = new SudokuCell[Constants.maxCellValue, Constants.maxCellValue];
@@ -43,8 +44,8 @@ namespace Sudoku
             for (int row = 0; row < Constants.boardRange; row++)
                 for (int col = 0; col < Constants.boardRange; col++)
                     if (this.Board[row, col].Value == 0) //marked with 0 is empty
-                        return true;
-            return false;
+                        return false;
+            return true;
         }
 
         // Check legal string of the board output

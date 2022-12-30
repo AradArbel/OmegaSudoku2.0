@@ -10,7 +10,8 @@ namespace Sudoku
     static class Constants
     {
         // Constants class for all the constants variables in the project
-        public const int maxCellValue = 4;
+        
+        public const int maxCellValue = 9;
         public const int minCellValue = 1;
 
         public const int boardRange = maxCellValue - 1;
@@ -19,6 +20,6 @@ namespace Sudoku
 
         // List of all legal items that can be a value in a cell
         public static readonly ArrayList Legal_Items = new ArrayList()
-        {"0","1","2","3","4","5","6","7","8","9"};
+        {'0','1','2','3','4','5','6','7','8','9'};
     }
 }
