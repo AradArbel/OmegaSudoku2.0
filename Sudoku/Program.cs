@@ -10,11 +10,7 @@ namespace Sudoku
     {
         public static void Main()
         {
-            SudokuBoard b = new SudokuBoard("831529600096810250540630180159083020483090715027045038365071890274958301000362547");
-            b.PrintBoard();
-            SudokuSolver.solveSudoku(b);
-            Console.WriteLine("----------------------------------------");
-            b.PrintBoard();
+            UserMenu.Menu();
         }
     }
 }

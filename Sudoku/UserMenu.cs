@@ -8,10 +8,13 @@ namespace Sudoku
 {
     internal class UserMenu
     {
+        // Handle manu for the user in which he can enter many sudoku puzzles in a row
         public static void Menu()
         {
+            // Infinity loop that ends only when the user decide to quit
             while (true)
             {
+                // Main menu
                 Console.WriteLine("Sudoku Menu:");
                 Console.WriteLine("1. Enter a new puzzle");
                 Console.WriteLine("2. Quit");
@@ -22,62 +25,81 @@ namespace Sudoku
 
                 switch (selection)
                 {
+                    // New puzzle
                     case 1:
                         Console.WriteLine("1. To enter a new puzzzle from the console choose 1");
                         Console.WriteLine("2. To enter a new puzzzle from a text file choose 2");
+                        Console.Write("Enter your selection: ");
                         selection = int.Parse(Console.ReadLine());
+
+                        string puzzleData = "";
 
                         switch (selection)
                         {
                             // Enter a new puzzle from the console
                             case 1:
                                 Console.WriteLine("Enter the puzzle");
-                                string puzzleData = Console.ReadLine();
+                                puzzleData = Console.ReadLine();
+                                ShowSolution(puzzleData);
                                 break;
                             // Enter a new puzzle from a text file
                             case 2:
                                 Console.Write("Enter the name of the text file: ");
                                 string filename = Console.ReadLine();
-                                int[,] puzzle = new int[9, 9];
-                                using (StreamReader reader = new StreamReader(filename))
+                                try
                                 {
-                                    for (int i = 0; i < 9; i++)
-                                    {
-                                        string line = reader.ReadLine();
-                                        string[] numbers = line.Split(' ');
-                                        for (int j = 0; j < 9; j++)
-                                        {
-                                            puzzle[i, j] = int.Parse(numbers[j]);
-                                        }
-                                    }
+                                    puzzleData = File.ReadAllText(filename);
+                                    ShowSolution(puzzleData);
+                                }
+                                catch (FileNotFoundException ex)
+                                {
+                                    Console.WriteLine("Error: The file was not found.");
+                                }
+                                catch (DirectoryNotFoundException ex)
+                                {
+                                    Console.WriteLine("Error: The directory was not found.");
+                                }
+                                catch (UnauthorizedAccessException ex)
+                                {
+                                    Console.WriteLine("Error: You do not have permission to access the file.");
+                                }
+                                catch (IOException ex)
+                                {
+                                    Console.WriteLine("Error: An I/O error occurred while reading the file.");
                                 }
                                 break;
 
+
                             default:
-                                SudokuBoard board = new SudokuBoard(puzzleData);
-                                Console.WriteLine("The sudoku puzzle is: ");
-                                board.PrintBoard();
-                                Console.WriteLine("----------------------------------------");
-                                Console.WriteLine("Here is the solution for this sudoku puzzle");
-                                SudokuSolver.solveSudoku(board);
-                                board.PrintBoard();
+                                Console.WriteLine("Invalid selection. \n Please select again \n");
+                                
                                 break;
-
-
-
-
                         }
 
                         break;
+                    // EXIT
                     case 2:
+                        Console.WriteLine("Bye bye");
                         return;
 
                     default:
-                        Console.WriteLine("Invalid selection.");
+                        Console.WriteLine("Invalid selection. Please select again \n");
                         break;
                 }
             }
 
+        }
+
+        // Solve the given sudoku and print it to the user
+        private static void ShowSolution(string data)
+        {
+            SudokuBoard board = new SudokuBoard(data);
+            Console.WriteLine("The sudoku puzzle is: ");
+            board.PrintBoard();
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine("Here is the solution for this sudoku puzzle");
+            SudokuSolver.solveSudoku(board);
+            board.PrintBoard();
         }
     }
 }
