@@ -10,10 +10,7 @@ namespace Sudoku
     {
         public static void Main()
         {
-            SudokuBoard b = new SudokuBoard("1003040101002010");
-            b.PrintBoard();
-            SudokuSolver.solveSudoku(b, 0, 0);
-            b.PrintBoard();
+            UserMenu.Menu();
         }
     }
 }
