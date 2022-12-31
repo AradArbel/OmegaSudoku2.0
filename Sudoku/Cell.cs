@@ -30,7 +30,7 @@ namespace Sudoku
             if (value == 0)
             {
                 // initialize all possible values in the beginning
-                for (int possible = Constants.minCellValue; possible <= Constants.maxCellValue; possible++)
+                for (int possible = Utilities.minCellValue; possible <= Utilities.maxCellValue; possible++)
                 {
                     possibleValues.Add(possible);
                 }
@@ -66,7 +66,7 @@ namespace Sudoku
         // Has this cell a valid value?
         public bool IsValid
         {
-            get { return this.Value >= Constants.minCellValue && this.Value <= Constants.maxCellValue; }
+            get { return this.Value >= Utilities.minCellValue && this.Value <= Utilities.maxCellValue; }
         }
 
         // Sets a value for this cell.

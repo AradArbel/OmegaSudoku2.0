@@ -31,50 +31,7 @@ namespace Sudoku
                         Console.WriteLine("2. To enter a new puzzzle from a text file choose 2");
                         Console.Write("Enter your selection: ");
                         selection = int.Parse(Console.ReadLine());
-
-                        string puzzleData = "";
-
-                        switch (selection)
-                        {
-                            // Enter a new puzzle from the console
-                            case 1:
-                                Console.WriteLine("Enter the puzzle");
-                                puzzleData = Console.ReadLine();
-                                ShowSolution(puzzleData);
-                                break;
-                            // Enter a new puzzle from a text file
-                            case 2:
-                                Console.Write("Enter the name of the text file: ");
-                                string filename = Console.ReadLine();
-                                try
-                                {
-                                    puzzleData = File.ReadAllText(filename);
-                                    ShowSolution(puzzleData);
-                                }
-                                catch (FileNotFoundException ex)
-                                {
-                                    Console.WriteLine("Error: The file was not found.");
-                                }
-                                catch (DirectoryNotFoundException ex)
-                                {
-                                    Console.WriteLine("Error: The directory was not found.");
-                                }
-                                catch (UnauthorizedAccessException ex)
-                                {
-                                    Console.WriteLine("Error: You do not have permission to access the file.");
-                                }
-                                catch (IOException ex)
-                                {
-                                    Console.WriteLine("Error: An I/O error occurred while reading the file.");
-                                }
-                                break;
-
-
-                            default:
-                                Console.WriteLine("Invalid selection. \n Please select again \n");
-                                
-                                break;
-                        }
+                        EnterMethod(selection);
 
                         break;
                     // EXIT
@@ -89,17 +46,76 @@ namespace Sudoku
             }
 
         }
+        // Sub menu that handle the user choise between console or text file
+        private static void EnterMethod(int selection)
+        {
+            string puzzleData;
+            switch (selection)
+            {
+                // Enter a new puzzle from the console
+                case 1:
+                    Console.WriteLine("Enter the puzzle");
+                    puzzleData = Console.ReadLine();
+                    //Utilities.boardSize = puzzleData.Length;
+                    Utilities.maxCellValue = (int)Math.Sqrt(puzzleData.Length);
+                    ShowSolution(puzzleData);
+                    break;
+                // Enter a new puzzle from a text file
+                case 2:
+                    Console.Write("Enter the name of the text file: ");
+                    string filename = Console.ReadLine();
+                    try
+                    {
+                        puzzleData = File.ReadAllText(filename);
+                        ShowSolution(puzzleData);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Console.WriteLine("Error: The file was not found.");
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        Console.WriteLine("Error: The directory was not found.");
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine("Error: You do not have permission to access the file.");
+                    }
+                    catch (IOException)
+                    {
+                        Console.WriteLine("Error: An I/O error occurred while reading the file.");
+                    }
+                    break;
+
+
+                default:
+                    Console.WriteLine("Invalid selection. \n Please select again \n");
+
+                    break;
+            }
+        }
 
         // Solve the given sudoku and print it to the user
         private static void ShowSolution(string data)
         {
-            SudokuBoard board = new SudokuBoard(data);
-            Console.WriteLine("The sudoku puzzle is: ");
-            board.PrintBoard();
-            Console.WriteLine("----------------------------------------");
-            Console.WriteLine("Here is the solution for this sudoku puzzle");
-            SudokuSolver.solveSudoku(board);
-            board.PrintBoard();
+            try
+            {
+                SudokuBoard board = new SudokuBoard(data);
+                Console.WriteLine("The sudoku puzzle is: ");
+                board.PrintBoard();
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine("Here is the solution for this sudoku puzzle");
+                SudokuSolver.solveSudoku(board);
+                board.PrintBoard();
+            }
+            catch(NotLegalStringException nlt)
+            {
+                Console.WriteLine(nlt.Message);
+            }
+            catch (NotLegalDataSizeException nlds)
+            {
+                Console.WriteLine(nlds.Message);
+            }
         }
     }
 }

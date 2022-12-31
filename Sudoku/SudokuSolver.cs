@@ -13,7 +13,7 @@ namespace Sudoku
         public static bool isExistInCol(SudokuCell cell, SudokuBoard board, int num)
         {
             int col = cell.Col;
-            for (int row = 0; row < Constants.boardRange; row++)
+            for (int row = 0; row < Utilities.maxCellValue-1; row++)
                 if (board.Board[row, col].Value == num)
                     return true;
             return false;
@@ -23,7 +23,7 @@ namespace Sudoku
         public static bool isExistInRow(SudokuCell cell, SudokuBoard board, int num)
         {
             int row = cell.Row;
-            for (int col = 0; col < Constants.boardRange; col++)
+            for (int col = 0; col < Utilities.maxCellValue - 1; col++)
                 if (board.Board[row, col].Value == num)
                     return true;
             return false;
@@ -33,12 +33,13 @@ namespace Sudoku
         public static bool isExistInBox(SudokuCell cell, SudokuBoard board, int num)
         {
             // Calculate the indices of the box that the value is in
-            int boxRow = cell.Row / Constants.boxRange;
-            int boxColumn = cell.Col / Constants.boxRange;
+            int boxRange = (int)Math.Sqrt(Utilities.maxCellValue);
+            int boxRow = cell.Row / boxRange;
+            int boxColumn = cell.Col / boxRange;
             // Iterate through the elements in the box and check if the value is present
-            for (int row = boxRow * Constants.boxRange; row < boxRow * Constants.boxRange + Constants.boxRange; row++)
+            for (int row = boxRow * boxRange; row < boxRow * boxRange + boxRange; row++)
             {
-                for (int col = boxColumn * Constants.boxRange; col < boxColumn * Constants.boxRange + Constants.boxRange; col++)
+                for (int col = boxColumn * boxRange; col < boxColumn * boxRange + boxRange; col++)
                 {
                     if (board.Board[row, col].Value == num)
                     {
@@ -57,11 +58,11 @@ namespace Sudoku
 
             //array of two numbers that represent the empty place loation by row and col
             int[] emptyPlace = new int[2];
-            for (row = 0; row < Constants.boardRange; row++)
+            for (row = 0; row < Utilities.maxCellValue-1; row++)
             {
                 if (!empty) // check if the empty place already has found. if yes return emptyPlace if not keep searching
                 {
-                    for (col = 0; col < Constants.boardRange && !empty; col++)  //marked with 0 is empty
+                    for (col = 0; col < Utilities.maxCellValue-1 && !empty; col++)  //marked with 0 is empty
                     {
                         if (board.Board[row, col].Value == 0)
                         {

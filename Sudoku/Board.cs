@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,55 +16,90 @@ namespace Sudoku
         public SudokuBoard(string boardData)
         {
             // check if the string that been put is legal
-            if (IsLegalBoard(boardData))
+            IsLegalBoardString(boardData);
+            this.board = new SudokuCell[Utilities.maxCellValue, Utilities.maxCellValue];
+            // Initialize the Sudoku table
+            for (int row = 0; row < Utilities.maxCellValue; row++)
             {
-                this.board = new SudokuCell[Constants.maxCellValue, Constants.maxCellValue];
-                // Initialize the Sudoku table
-                for (int row = 0; row < Constants.maxCellValue; row++)
+                for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
-                    for (int col = 0; col < Constants.maxCellValue; col++)
-                    {
-                        this.board[row, col] = new SudokuCell(row, col, (int)boardData[(row * Constants.maxCellValue) + col] - '0');
-                    }
-
+                    this.board[row, col] = new SudokuCell(row, col, (int)boardData[(row * Utilities.maxCellValue) + col] - '0');
                 }
-            }
-             // todo add try catch notLegalStringException
-           
-
-            
+            }   
         }
 
         /// Get sudoku board
         public SudokuCell[,] Board
-        { get { return this.board; } }
+        {
+            get
+            {
+                try
+                {
+                    return this.board;
+                }
+                catch (NullReferenceException)
+                {
+                    Console.WriteLine("Error: The board has not been initialized.");
+                    return null;
+                }
+            }
+        }
+
+        // Get size of the board
+        public int Size { get => Size;}
 
         // Check if the board is full (None 0 values)
         public bool IsFull()
         {
-            for (int row = 0; row < Constants.boardRange; row++)
-                for (int col = 0; col < Constants.boardRange; col++)
-                    if (this.Board[row, col].Value == 0) //marked with 0 is empty
-                        return false;
-            return true;
+            try
+            {
+                for (int row = 0; row < Utilities.maxCellValue -1; row++)
+                    for (int col = 0; col < Utilities.maxCellValue - 1; col++)
+                        if (this.Board[row, col].Value == 0) //marked with 0 is empty
+                            return false;
+                return true;
+            }
+            catch (NullReferenceException)
+            {
+                Console.WriteLine("Error: One or more cells in the board have not been initialized.");
+                return false;
+            }
+        }
+
+        // List of all legal items that can be a value in a cell
+        public static ArrayList Legal_Items()
+        {
+            ArrayList legal_items = new ArrayList();
+            legal_items.Add(0);
+            for (int value = Utilities.minCellValue; value <= Utilities.maxCellValue; value++)
+            {
+                legal_items.Add(value);
+            }
+            return legal_items;
         }
 
         // Check legal string of the board output
-        private bool IsLegalBoard(String boardData)
+        private void IsLegalBoardString(String boardData)
         {
-            // Check for every char in the string if it is in the legal items list. if not return false.
+            // Check if the amount of values is equal to the board size
+            if (!Utilities.Legal_Sizes.Contains(boardData.Length))
+                throw new NotLegalDataSizeException("Error: The board size is ilegal.\n Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
+
+            // Check for every char in the string if it is in the legal items list.
             foreach (char value in boardData)
-                if (!Constants.Legal_Items.Contains(value))
-                    return false;
-            return true;
+            {
+                if (!Legal_Items().Contains(value))
+                    throw new NotLegalStringException("Error: The board data string has ilegal char in his string data.\n");
+            }
+            
         }
 
         // Print board
         public void PrintBoard()
         {
-            for (int row = 0; row < Constants.maxCellValue; row++)
+            for (int row = 0; row < Utilities.maxCellValue; row++)
             {
-                for (int col = 0; col < Constants.maxCellValue; col++)
+                for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
                     Console.Write(board[row, col].Value + " ");
                 }
