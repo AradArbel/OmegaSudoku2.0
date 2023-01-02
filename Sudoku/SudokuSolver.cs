@@ -69,7 +69,7 @@ namespace Sudoku
                             emptyPlace[0] = row; // add row number to the first place in the array which represent the row of the empty place
                             emptyPlace[1] = col; // add col number to the second place in the array which represent the col of the empty place  
                             empty = true; // change the flag to true once we found the empty place to exist the loop
-                        }
+        }
                     }
                 }
 
@@ -115,10 +115,10 @@ namespace Sudoku
 
             // itreate throw all possible values in each cell and try to set their possible values to specific location
             foreach (char possibleValue in board.Board[row, col].PossibleValues)
-            {
+        {
                 //check validation, if yes, put the number in the grid
                 if (isValidPlace(board.Board[row, col], board, (int)possibleValue))
-                {
+            {
                     board.Board[row, col].Value = (int)possibleValue;
                     if (backTracking(board)) //recursively go for other rooms in the grid
                         return true;
@@ -128,7 +128,7 @@ namespace Sudoku
             }
             // No vaild value found -> puzzle cant be solved    
             return false;
-        }
+                }
 
         // Solve the sudoku puzzle
         public static bool solveSudoku(SudokuBoard board)
