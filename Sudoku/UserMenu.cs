@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,21 +22,21 @@ namespace Sudoku
 
 
                 Console.Write("Enter your selection: ");
-                int selection = int.Parse(Console.ReadLine());
+                string selection = Console.ReadLine();
 
                 switch (selection)
                 {
                     // New puzzle
-                    case 1:
+                    case "1":
                         Console.WriteLine("1. To enter a new puzzzle from the console choose 1");
                         Console.WriteLine("2. To enter a new puzzzle from a text file choose 2");
                         Console.Write("Enter your selection: ");
-                        selection = int.Parse(Console.ReadLine());
+                        selection = Console.ReadLine();
                         EnterMethod(selection);
 
                         break;
                     // EXIT
-                    case 2:
+                    case "2":
                         Console.WriteLine("Bye bye");
                         return;
 
@@ -47,13 +48,13 @@ namespace Sudoku
 
         }
         // Sub menu that handle the user choise between console or text file
-        private static void EnterMethod(int selection)
+        private static void EnterMethod(string selection)
         {
             string puzzleData;
             switch (selection)
             {
                 // Enter a new puzzle from the console
-                case 1:
+                case "1":
                     Console.WriteLine("Enter the puzzle");
                     puzzleData = Console.ReadLine();
                     //Utilities.boardSize = puzzleData.Length;
@@ -61,7 +62,7 @@ namespace Sudoku
                     ShowSolution(puzzleData);
                     break;
                 // Enter a new puzzle from a text file
-                case 2:
+                case "2":
                     Console.Write("Enter the name of the text file: ");
                     string filename = Console.ReadLine();
                     try
@@ -105,10 +106,23 @@ namespace Sudoku
                 board.PrintBoard();
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine("Here is the solution for this sudoku puzzle");
-                SudokuSolver.solveSudoku(board);
-                board.PrintBoard();
+
+                // Running time measurement
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                if (SudokuSolver.solveSudoku(board))
+                {
+                    board.PrintBoard();
+                    // print running time
+                    stopwatch.Stop();
+                    Console.WriteLine("Time: " + stopwatch.ElapsedMilliseconds + " ms");
+                }
+
+                // In case that the sudoku in unsolveable
+                else
+                    Console.WriteLine("The puzzle cannot be solved");
             }
-            catch(NotLegalStringException nlt)
+            catch (NotLegalStringException nlt)
             {
                 Console.WriteLine(nlt.Message);
             }
