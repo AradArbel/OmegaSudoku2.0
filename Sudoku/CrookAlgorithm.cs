@@ -43,7 +43,6 @@ namespace Sudoku
             foreach (SudokuCell sudokuCell in board.Board)
                 if (sudokuCell.PossibleValues.Count == 1 )
                     sudokuCell.Value = (sudokuCell.PossibleValues[0]);
-
         }
 
     }

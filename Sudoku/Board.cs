@@ -85,13 +85,13 @@ namespace Sudoku
         {
             // Check if the amount of values is equal to the board size
             if (!Utilities.Legal_Sizes.Contains(boardData.Length))
-                throw new NotLegalDataSizeException("Error: The board size is ilegal.\n Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
+                throw new NotLegalDataSizeException("Error: The board size is ilegal. Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
 
             // Check for every char in the string if it is in the legal items list.
             foreach (char value in boardData)
             {
                 if (!Legal_Items().Contains(value))
-                    throw new NotLegalStringException("Error: The board data string has ilegal char in his string data.\n");
+                    throw new NotLegalStringException("Error: The board data string has ilegal char in his string data.");
             }
 
         }
@@ -99,15 +99,33 @@ namespace Sudoku
         // Print board
         public void PrintBoard()
         {
+            //Define box range
+            int boxRange = (int)(Math.Sqrt(Utilities.maxCellValue));
+
+            // Itrate throw every cell in the board and print is value;
             for (int row = 0; row < Utilities.maxCellValue; row++)
             {
                 for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
-                    Console.Write(this.board[row, col].Value.ToString() + " ");
+                    Console.Write(board[row, col].Value + " ");
+                    if ((col + 1) % boxRange == 0)
+                    {
+                        Console.Write("| ");
+                    }
                 }
-                Console.WriteLine("");
+                // Separation between boxes to make the grid more readable 
+                Console.WriteLine();
+                if ((row + 1) % boxRange == 0)
+                {
+                    for (int spaceCounter = 0; spaceCounter < Utilities.maxCellValue + boxRange - 1; spaceCounter++)
+                    {
+                        Console.Write("--");
+                    }
+                    Console.WriteLine();
+                }
             }
         }
+
 
     }
 }
