@@ -13,13 +13,17 @@ namespace Sudoku
     {
         // Look for cells that have the same set of possible values,
         // and eliminate those values from the list of potential values for other cells in the same row
-        static void NakedPairRow(SudokuBoard board)
+
+        // Board range according to it size
+        public static int boardRange = Utilities.maxCellValue - 1;
+        static bool NakedPairRow(SudokuBoard board)
         {
+            bool flag = false; // Check if naked pair has been found
             // Iterate through the rows of the puzzle
-            for (int row = 0; row < Utilities.maxCellValue; row++)
+            for (int row = 0; row < boardRange; row++)
             {
                 // Iterate through the columns of the puzzle
-                for (int col = 0; col < Utilities.maxCellValue; col++)
+                for (int col = 0; col < boardRange; col++)
                 {
                     // Get the current cell
                     SudokuCell cell = board.Board[row, col];
@@ -29,7 +33,7 @@ namespace Sudoku
                         continue;
 
                     // Iterate through the remaining cells in the row
-                    for (int currentCol = col + 1; currentCol < Utilities.maxCellValue; currentCol++)
+                    for (int currentCol = col + 1; currentCol < boardRange; currentCol++)
                     {
                         // Get the other cell in the row
                         SudokuCell otherCell = board.Board[row, currentCol];
@@ -39,34 +43,34 @@ namespace Sudoku
                             continue;
 
                         // Check if the two cells have the same set of possible values
-                        if (cell.PossibleValues.SequenceEqual(otherCell.PossibleValues))
+                        if (cell.PossibleValues.SequenceEqual(otherCell.PossibleValues) && cell.PossibleValues.Count == 2 && otherCell.PossibleValues.Count == 2)
                         {
                             // The cells have the same set of possible values, so eliminate those values from the list of potential values for all other cells in the row
-                            for (int currentRow = 0; currentRow < Utilities.maxCellValue; currentRow++)
+                            for (int checkCol = 0; checkCol < boardRange; checkCol++)
                             {
-                                if (currentRow == row)
-                                    continue;
+                                if (checkCol != cell.Col && checkCol != otherCell.Col) // Not one of the cells that found to have the same set of 2 possible value
+                                {
+                                    board.Board[row, checkCol].PossibleValues.RemoveAll(val => cell.PossibleValues.Contains(val));
+                                    flag = true;
+                                }
 
-                                SudokuCell otherRowCell = board.Board[currentRow, col];
-                                otherRowCell.PossibleValues.RemoveAll(val => cell.PossibleValues.Contains(val));
-                                board.Board[row, currentCol] = otherRowCell;
                             }
                         }
                     }
                 }
             }
-
-
+            return flag;
         }
 
         // Look for cells that have the same set of possible values,
         // and eliminate those values from the list of potential values for other cells in the same col
-        static void NakedPairCol(SudokuBoard board)
+        static bool NakedPairCol(SudokuBoard board)
         {
-            for (int col = 0; col < Utilities.maxCellValue; col++)
+            bool flag = false; // Check if naked pair has been found
+            for (int col = 0; col < boardRange; col++)
             {
                 // Iterate through the rows of the puzzle
-                for (int row = 0; row < Utilities.maxCellValue; row++)
+                for (int row = 0; row < boardRange; row++)
                 {
                     // Get the current cell
                     SudokuCell cell = board.Board[row, col];
@@ -76,7 +80,7 @@ namespace Sudoku
                         continue;
 
                     // Iterate through the remaining cells in the column
-                    for (int currentRow = row + 1; currentRow < Utilities.maxCellValue; currentRow++)
+                    for (int currentRow = row + 1; currentRow < boardRange; currentRow++)
                     {
                         // Get the other cell in the column
                         SudokuCell otherCell = board.Board[currentRow, col];
@@ -86,22 +90,22 @@ namespace Sudoku
                             continue;
 
                         // Check if the two cells have the same set of possible values
-                        if (cell.PossibleValues.SequenceEqual(otherCell.PossibleValues))
+                        if (cell.PossibleValues.SequenceEqual(otherCell.PossibleValues) && cell.PossibleValues.Count == 2 && otherCell.PossibleValues.Count == 2)
                         {
                             // The cells have the same set of possible values, so eliminate those values from the list of potential values for all other cells in the column
-                            for (int currentCol = 0; currentCol < Utilities.maxCellValue; currentCol++)
+                            for (int checkRow = 0; checkRow < boardRange; checkRow++)
                             {
-                                if (currentCol == col)
-                                    continue;
-
-                                SudokuCell otherColCell = board.Board[row, currentCol];
-                                otherColCell.PossibleValues.RemoveAll(val => cell.PossibleValues.Contains(val));
-                                board.Board[row, currentCol] = otherColCell;
+                                if (checkRow != cell.Row && checkRow != otherCell.Row) // Not one of the cells that found to have the same set of 2 possible value
+                                {
+                                    board.Board[checkRow, col].PossibleValues.RemoveAll(val => cell.PossibleValues.Contains(val));
+                                    flag = true;
+                                }
                             }
                         }
                     }
                 }
             }
+            return flag;
         }
 
         // Look for cells that have the same set of possible values,
@@ -112,7 +116,7 @@ namespace Sudoku
             int boxRange = (int)Math.Sqrt(Utilities.maxCellValue);
 
             // Iterate through the regions of the puzzle
-            for (int box = 0; box < Utilities.maxCellValue; box++)
+            for (int box = 0; box < boardRange; box++)
             {
                 // Calculate the starting row and column for the box
                 int startRow = (box / boxRange) * boxRange;
@@ -150,12 +154,10 @@ namespace Sudoku
                                     {
                                         for (int otherCol = startCol; otherCol < startCol + boxRange; otherCol++)
                                         {
-                                            if (otherRow == row && otherCol == col)
-                                                continue;
-
-                                            SudokuCell otherBoxCell = board.Board[otherRow, otherCol];
-                                            otherBoxCell.PossibleValues.RemoveAll(val => cell.PossibleValues.Contains(val));
-                                            board.Board[otherRow, otherCol] = otherBoxCell;
+                                            if (otherRow != cell.Row && otherCol != cell.Col && otherRow != otherCell.Row && otherCol != otherCell.Col) // Not one of the cells that found to have the same set of 2 possible value
+                                            {
+                                                board.Board[otherRow, otherCol].PossibleValues.RemoveAll(val => cell.PossibleValues.Contains(val));
+                                            }
                                         }
                                     }
                                 }
@@ -166,17 +168,84 @@ namespace Sudoku
             }
         }
 
-        // Apply "naked pair" optimization to each row,col and box of the sudoku board
-        public static void NakedPair(SudokuBoard board)
+        
+
+
+        //iteratively apply constraint propagation techniques until puzzle is fully deduced
+        public static bool DeducePuzzle(SudokuBoard board)
         {
-            // Apply on rows
-            NakedPairRow(board);
-            // Apply on cols
-            NakedPairCol(board);
-            // Applay on boxes
-            NakedPairBox(board);
+            bool isDeduced = false;
+            // continue iterating until puzzle is fully deduced
+            while (!isDeduced)
+            {
+                isDeduced = true;
+                // iterate through all cells in the board
+                for (int row = 0; row < Utilities.maxCellValue; row++)
+                {
+                    for (int col = 0; col < Utilities.maxCellValue; col++)
+                    {
+                        // only check empty cells
+                        if (board.Board[row, col].Value == 0)
+                        {
+                            // apply constraint propagation techniques
+                            if (ApplyNakedSingle(board, row, col))
+                            {
+                                // if a value was placed, continue iterating
+                                isDeduced = false;
+                            }
+                            else if (ApplyHiddenSingle(board, row, col))
+                            {
+                                isDeduced = false;
+                            }
+                            else if (ApplyNakedPair(board))
+                            {
+                                isDeduced = false;
+                            }
+                            else if (ApplyHiddenPair(board, row, col))
+                            {
+                                isDeduced = false;
+                            }
+                        }
+                    }
+                }
+            }
+            return isDeduced;
         }
 
-    }
+        private static bool ApplyHiddenSingle(SudokuBoard board, int row, int col)
+        {
+            throw new NotImplementedException();
+        }
 
+        private static bool ApplyNakedSingle(SudokuBoard board, int row, int col)
+        {
+            if (board.Board[row, col].PossibleValues.Count == 1)
+            {
+                board.Board[row, col].Value = (board.Board[row, col].PossibleValues[0]);
+                return true;
+            }
+            return false;
+        }
+
+
+        private static bool ApplyHiddenPair(SudokuBoard board, int row, int col)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Apply "naked pair" optimization to each row,col and box of the sudoku board
+        private static bool ApplyNakedPair(SudokuBoard board)
+        {
+            // Apply naked pair on the board
+            if (NakedPairRow(board) || NakedPairCol(board))
+                return true;
+            return false;
+
+            //NakedPairRow(board);
+            // Apply on cols
+            //NakedPairCol(board);
+            // Applay on boxes
+            //NakedPairBox(board);
+        }
+    }
 }

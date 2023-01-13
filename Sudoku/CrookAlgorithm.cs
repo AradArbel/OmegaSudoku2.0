@@ -32,13 +32,13 @@ namespace Sudoku
         {
             foreach (SudokuCell sudokuCell in board.Board)
             {
+                sudokuCell.PossibleValues.Clear();
                 for (int possible = Utilities.minCellValue; possible <= Utilities.maxCellValue; possible++)
                 {
                     // Check if value is possible
                     if(!SudokuSolver.IsExistInRow(sudokuCell, board, possible) && SudokuSolver.IsExistInCol(sudokuCell, board, possible) && SudokuSolver.IsExistInBox(sudokuCell, board, possible)) 
                         sudokuCell.PossibleValues.Add(possible);
-                }
-                
+                }  
             }
         }
 

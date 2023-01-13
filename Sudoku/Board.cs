@@ -142,7 +142,8 @@ namespace Sudoku
         {
             // Check if the amount of values is equal to the board size
             if (!Utilities.Legal_Sizes.Contains(boardData.Length))
-                throw new NotLegalDataSizeException("Error: The board size is ilegal. Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
+                throw new NotLegalDataSizeException("Error: The board size is ilegal. \n" +
+                    " Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
 
             // Check for every char in the string if it is in the legal items list.
             foreach (char value in boardData)

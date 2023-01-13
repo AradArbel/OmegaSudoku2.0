@@ -83,7 +83,9 @@ namespace Sudoku
         // Solve the sudoku in recursive backtracking method
         public static bool BackTracking(SudokuBoard board)
         {
-            SudokuBoard copyBoard = board; // Create a copy of the board before making any changes
+            string copyString; // Create a copy of the board before making any changes
+
+            CrookAlgorithm.UniqueCells(board);
 
             //Itrate throw all cells in the board to find the first empty cell
             int row = -1, col = -1;
@@ -93,10 +95,9 @@ namespace Sudoku
             if (row == -1)
                 return true;
 
+            CrookAlgorithm.RemoveUnpossibleValues(board.Board[row, col], board);
 
-            //CrookAlgorithm.RemoveValuesFromCells(board);
-
-            //CrookAlgorithm.RemoveUnpossibleValues(board.Board[row, col], board);
+            ConstraintPropagation.ApplyNakedPair(board);
 
             // itreate throw all possible values in each cell and try to set their possible values to specific location
             foreach (int possibleValue in board.Board[row, col].PossibleValues)
@@ -104,12 +105,15 @@ namespace Sudoku
                 //check validation, if yes, put the number in the grid
                 if (IsValidPlace(board.Board[row, col], board,possibleValue))
                 {
-                     // create new copy of the board before
+                    // create new copy of the data of the board before change it
+                    copyString = board.ConvertBoardToString();
                     board.Board[row, col].Value = possibleValue;
                     if (BackTracking(board)) //recursively go for other rooms in the grid
                         return true;
                     //turn to unassigned space when conditions are not satisfied
-                    board.Board[row, col].Value = 0;
+                    board.UpdateBoardData(copyString);
+
+                    //board.Board[row, col].Value = 0;
                     //board.Board = copyBoard.Board; // restore the board to its previous state
 
                     //restore possible values for each cell
@@ -129,6 +133,8 @@ namespace Sudoku
 
             // Then sets all unique cell value - cell that have only one possible value
             CrookAlgorithm.UniqueCells(board);
+
+            ConstraintPropagation.ApplyNakedPair(board);
 
             // After that use backTracking algorithem in recursive way
             if (BackTracking(board))
