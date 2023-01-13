@@ -11,30 +11,42 @@ namespace Sudoku
 {
     static class CrookAlgorithm
     {
-        // Remove values that are already used in the row, column, and box
-        static void RemoveUnpossibleValues(SudokuCell cell, SudokuBoard board)
+        // Remove possible values that are already used in the row, column, and box from a cell
+        public static void RemoveUnpossibleValues(SudokuCell cell, SudokuBoard board)
         {
-            int row = cell.Row;
-            int col = cell.Col;
-
-            for (int possibleIndex = 0; possibleIndex < cell.PossibleValues.Count; possibleIndex++)
+            // Check if cell already has a value 
+            if (cell.Value == 0)
             {
-                int value = cell.PossibleValues[possibleIndex];
-                if (SudokuSolver.isExistInRow(cell, board, (int)value) || SudokuSolver.isExistInCol(cell, board, (int)value) || SudokuSolver.isExistInBox(cell, board, (int)value))
+                for (int possibleIndex = 0; possibleIndex < cell.PossibleValues.Count; possibleIndex++)
                 {
-                    cell.RemovePossibility((int)value);
+                    int value = cell.PossibleValues[possibleIndex];
+                    if (SudokuSolver.IsExistInRow(cell, board,value) || SudokuSolver.IsExistInCol(cell, board,value) || SudokuSolver.IsExistInBox(cell, board,value))
+                        cell.RemovePossibility(value);
+                }
             }
-            }
+           
+        }
 
+        // Update possible values list for each cell of the board
+        public static void UpdatePossibleValues(SudokuBoard board)
+        {
+            foreach (SudokuCell sudokuCell in board.Board)
+            {
+                for (int possible = Utilities.minCellValue; possible <= Utilities.maxCellValue; possible++)
+                {
+                    // Check if value is possible
+                    if(!SudokuSolver.IsExistInRow(sudokuCell, board, possible) && SudokuSolver.IsExistInCol(sudokuCell, board, possible) && SudokuSolver.IsExistInBox(sudokuCell, board, possible)) 
+                        sudokuCell.PossibleValues.Add(possible);
+                }
+                
+            }
         }
 
         // Remove unpossible values from each cell on the board
         public static void RemoveValuesFromCells(SudokuBoard board)
             {
             foreach(SudokuCell sudokuCell in board.Board)
-                {
                 RemoveUnpossibleValues(sudokuCell, board);
-                }
             }
 
         // Check if there are any unique cells (cell that only have one possible value from the beginning) in the board. if found update their value

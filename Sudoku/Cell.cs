@@ -35,10 +35,10 @@ namespace Sudoku
                     possibleValues.Add(possible);
                 }
             }
-            //else // mean that this cell have constant value. add this single value to possible values list
-            //{
-            //   possibleValues.Add(value);
-            //}
+            else // mean that this cell have constant value. add this single value to possible values list
+            {
+               possibleValues.Add(value);
+            }
         }
 
         // Get row for this cell into a Sudoku board.

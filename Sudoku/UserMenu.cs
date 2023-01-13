@@ -110,7 +110,7 @@ namespace Sudoku
                 // Running time measurement
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                if (SudokuSolver.solveSudoku(board))
+                if (SudokuSolver.SolveSudoku(board))
                 {
                     board.PrintBoard();
                     // print running time
