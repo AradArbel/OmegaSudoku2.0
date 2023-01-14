@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Sudoku
     {
         private SudokuCell[,] board;
 
-        /// Constructor for this class.
+        // Constructor for this class.
         public SudokuBoard(string boardData)
         {
             // check if the string that been put is legal
@@ -28,7 +29,7 @@ namespace Sudoku
             }
         }
 
-        /// Get and set sudoku board
+        // Get and set sudoku board
         public SudokuCell[,] Board
         {
             get
@@ -54,14 +55,14 @@ namespace Sudoku
         public string ConvertBoardToString()
         {
             //create a new StringBuilder object
-            StringBuilder boardData = new StringBuilder();
+            string boardData="";
             //loop through the rows and columns of the board
             for (int row = 0; row < Utilities.maxCellValue; row++)
             {
                 for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
                     //append the value of each cell to the StringBuilder object
-                    boardData.Append(this.board[row, col].Value);
+                    boardData += (this.board[row, col].Value);
                 }
             }
             //return the string representation of the board
@@ -74,14 +75,33 @@ namespace Sudoku
             {
                 for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
-                    this.board[row, col] = new SudokuCell(row, col, (int)data[(row * Utilities.maxCellValue) + col] - '0');
+                    this.board[row, col].Value = (int)data[(row * Utilities.maxCellValue) + col]-'0';
                 }
             }
         }
-
-        public void restoreBoad()
+        // save every possible value list in the cell
+        public List<int>[] SavePossibleValues()
         {
+            // Create an array of all possible values lists in the board
+            List<int>[] arrayOfLists = new List<int>[Utilities.maxCellValue*Utilities.maxCellValue];
+            int listIndex = 0;
+            foreach(SudokuCell cell in this.Board)
+            {
+                arrayOfLists[listIndex] = cell.PossibleValues;
+                listIndex++;
+            }
+            return arrayOfLists;
+        }
 
+        // update every possible value list in the cell
+        public void UpdatePossibleValuesLists(List<int>[] arrayOfLists)
+        {
+            int listIndex = 0;
+            foreach (SudokuCell cell in this.board)
+            {
+                cell.PossibleValues = arrayOfLists[listIndex];
+                listIndex++;
+            }
         }
 
         //Clone Method
@@ -110,8 +130,8 @@ namespace Sudoku
         {
             try
             {
-                for (int row = 0; row < Utilities.maxCellValue - 1; row++)
-                    for (int col = 0; col < Utilities.maxCellValue - 1; col++)
+                for (int row = 0; row < Utilities.maxCellValue; row++)
+                    for (int col = 0; col < Utilities.maxCellValue; col++)
                         if (this.Board[row, col].Value == 0) //marked with 0 is empty
                             return false;
                 return true;
@@ -160,12 +180,18 @@ namespace Sudoku
             //Define box range
             int boxRange = (int)(Math.Sqrt(Utilities.maxCellValue));
 
+            bool twoDig = Utilities.maxCellValue > 9; // Check if board size is more then 9X9 (constain two digit numbers) 
+
             // Itrate throw every cell in the board and print is value;
             for (int row = 0; row < Utilities.maxCellValue; row++)
             {
                 for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
-                    Console.Write(board[row, col].Value + " ");
+                    // if the board size is more then 9X9 add "0" before every singgle digit value to make the print look nicer
+                    if (twoDig && board[row, col].Value <= 9)
+                        Console.Write("0"+board[row, col].Value + " ");
+                    else
+                        Console.Write(board[row, col].Value + " ");
                     if ((col + 1) % boxRange == 0)
                     {
                         Console.Write("| ");

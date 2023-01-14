@@ -14,16 +14,22 @@ namespace Sudoku
         // Remove possible values that are already used in the row, column, and box from a cell
         public static void RemoveUnpossibleValues(SudokuCell cell, SudokuBoard board)
         {
-            // Check if cell already has a value 
             if (cell.Value == 0)
             {
-                for (int possibleIndex = 0; possibleIndex < cell.PossibleValues.Count; possibleIndex++)
+                List<int> unpossibleValues = new List<int>(); // list of values to be remove
+                foreach (int value in cell.PossibleValues)
                 {
-                    int value = cell.PossibleValues[possibleIndex];
-                    if (SudokuSolver.IsExistInRow(cell, board,value) || SudokuSolver.IsExistInCol(cell, board,value) || SudokuSolver.IsExistInBox(cell, board,value))
-                        cell.RemovePossibility(value);
+                    //check if value is unpossible
+                    if (SudokuSolver.IsExistInRow(cell, board, value) || SudokuSolver.IsExistInCol(cell, board, value) || SudokuSolver.IsExistInBox(cell, board, value))
+                        unpossibleValues.Add(value);
+                }
+                foreach (int value in unpossibleValues) // remove all impossibale values
+                {
+                    cell.RemovePossibility(value);
                 }
             }
+                                              
+            
            
         }
 

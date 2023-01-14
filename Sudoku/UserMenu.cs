@@ -57,18 +57,21 @@ namespace Sudoku
                 case "1":
                     Console.WriteLine("Enter the puzzle");
                     puzzleData = Console.ReadLine();
-                    //Utilities.boardSize = puzzleData.Length;
+                    //Determining the maximum value according to the board size
                     Utilities.maxCellValue = (int)Math.Sqrt(puzzleData.Length);
-                    ShowSolution(puzzleData);
+                    Utilities.ShowSolution(puzzleData);
                     break;
                 // Enter a new puzzle from a text file
                 case "2":
-                    Console.Write("Enter the name of the text file: ");
-                    string filename = Console.ReadLine();
+                    Console.Write("Enter the path of the text file: ");
+                    string path = Console.ReadLine();
                     try
                     {
-                        puzzleData = File.ReadAllText(filename);
-                        ShowSolution(puzzleData);
+                        // read the board data from the file
+                        puzzleData = File.ReadAllText(path);
+                        //Determining the maximum value according to the board size
+                        Utilities.maxCellValue = (int)Math.Sqrt(puzzleData.Length); 
+                        Utilities.ShowSolution(puzzleData,path);
                     }
                     catch (FileNotFoundException)
                     {
@@ -96,40 +99,6 @@ namespace Sudoku
             }
         }
 
-        // Solve the given sudoku and print it to the user
-        private static void ShowSolution(string data)
-        {
-            try
-            {
-                SudokuBoard board = new SudokuBoard(data);
-                Console.WriteLine("The sudoku puzzle is: ");
-                board.PrintBoard();
-                Console.WriteLine("----------------------------------------");
-                Console.WriteLine("Here is the solution for this sudoku puzzle");
-
-                // Running time measurement
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-                if (SudokuSolver.SolveSudoku(board))
-                {
-                    board.PrintBoard();
-                    // print running time
-                    stopwatch.Stop();
-                    Console.WriteLine("Time: " + stopwatch.ElapsedMilliseconds + " ms");
-                }
-
-                // In case that the sudoku in unsolveable
-                else
-                    Console.WriteLine("The puzzle cannot be solved");
-            }
-            catch (NotLegalStringException nlt)
-            {
-                Console.WriteLine(nlt.Message);
-            }
-            catch (NotLegalDataSizeException nlds)
-            {
-                Console.WriteLine(nlds.Message);
-            }
-        }
+        
     }
 }

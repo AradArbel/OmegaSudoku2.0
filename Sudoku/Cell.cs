@@ -69,34 +69,5 @@ namespace Sudoku
             get { return this.Value >= Utilities.minCellValue && this.Value <= Utilities.maxCellValue; }
         }
 
-        // Checks if the specified value is valid for a cell.
-        private bool IsVaildValue(int value)
-        {
-            if (!possibleValues.Contains(value))
-            {
-                return false;
-            }
-            return true;
-
-        }
-
-        // Sets a value for this cell.
-        /*
-        public void SetValue(int value)
-        {
-            /*if (this.IsValid)
-            {
-                throw new ApplicationException(
-                    string.Format("Already has been set a value for cell at [{0}, {1}].",
-                    this.row + 1, this.col + 1));
-            }
-            
-
-            if (IsVaildValue(value))
-                this.value = value;
-            //todo add not vaild value exception
-        }
-        */
-
     }
 }

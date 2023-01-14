@@ -13,7 +13,7 @@ namespace Sudoku
         public static bool IsExistInCol(SudokuCell cell, SudokuBoard board, int num)
         {
             int col = cell.Col;
-            for (int row = 0; row < Utilities.maxCellValue - 1; row++)
+            for (int row = 0; row < Utilities.maxCellValue; row++)
                 if (board.Board[row, col].Value == num)
                     return true;
             return false;
@@ -23,7 +23,7 @@ namespace Sudoku
         public static bool IsExistInRow(SudokuCell cell, SudokuBoard board, int num)
         {
             int row = cell.Row;
-            for (int col = 0; col < Utilities.maxCellValue - 1; col++)
+            for (int col = 0; col < Utilities.maxCellValue; col++)
                 if (board.Board[row, col].Value == num)
                     return true;
             return false;
@@ -84,8 +84,7 @@ namespace Sudoku
         public static bool BackTracking(SudokuBoard board)
         {
             string copyString; // Create a copy of the board before making any changes
-
-            CrookAlgorithm.UniqueCells(board);
+            List<int>[] arrayOfPossibleLists; // this array will be used to save the possible values
 
             //Itrate throw all cells in the board to find the first empty cell
             int row = -1, col = -1;
@@ -95,9 +94,13 @@ namespace Sudoku
             if (row == -1)
                 return true;
 
-            CrookAlgorithm.RemoveUnpossibleValues(board.Board[row, col], board);
+            //CrookAlgorithm.RemoveUnpossibleValues(board.Board[row, col], board);
+            //CrookAlgorithm.RemoveValuesFromCells(board);
 
-            ConstraintPropagation.ApplyNakedPair(board);
+            // save possible values lists
+            arrayOfPossibleLists = board.SavePossibleValues();
+            ConstraintPropagation.DeducePuzzle(board,row,col); // Apply all constraint propagation optimizations until the board is fully optimize
+
 
             // itreate throw all possible values in each cell and try to set their possible values to specific location
             foreach (int possibleValue in board.Board[row, col].PossibleValues)
@@ -107,13 +110,16 @@ namespace Sudoku
                 {
                     // create new copy of the data of the board before change it
                     copyString = board.ConvertBoardToString();
+                    
                     board.Board[row, col].Value = possibleValue;
                     if (BackTracking(board)) //recursively go for other rooms in the grid
                         return true;
                     //turn to unassigned space when conditions are not satisfied
-                    board.UpdateBoardData(copyString);
-
+                    board.UpdateBoardData(copyString); // update values
                     //board.Board[row, col].Value = 0;
+                    board.UpdatePossibleValuesLists(arrayOfPossibleLists); // update possible lists
+
+                    
                     //board.Board = copyBoard.Board; // restore the board to its previous state
 
                     //restore possible values for each cell
@@ -134,7 +140,7 @@ namespace Sudoku
             // Then sets all unique cell value - cell that have only one possible value
             CrookAlgorithm.UniqueCells(board);
 
-            ConstraintPropagation.ApplyNakedPair(board);
+            //ConstraintPropagation.ApplyNakedPair(board);
 
             // After that use backTracking algorithem in recursive way
             if (BackTracking(board))
