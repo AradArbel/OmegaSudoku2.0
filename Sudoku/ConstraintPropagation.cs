@@ -181,6 +181,7 @@ namespace Sudoku
                             }
                             else
                             {
+                                // pairCount > 2, this pair can't be a hidden pair
                                 break;
                             }
                         }
@@ -244,6 +245,7 @@ namespace Sudoku
                             }
                             else
                             {
+                                // pairCount > 2, this pair can't be a hidden pair
                                 break;
                             }
                         }
@@ -319,6 +321,7 @@ namespace Sudoku
                                 }
                                 else
                                 {
+                                    // pairCount > 2, this pair can't be a hidden pair
                                     break;
                                 }
                             }
@@ -328,14 +331,14 @@ namespace Sudoku
                     // If the pair is only found in two specific cells, remove other candidates from those cells
                     if (pairCount == 2)
                     {
-                        for (int r = boxRow * boxRange; r < (boxRow + 1) * boxRange; r++)
+                        for (int currentRow = boxRow * boxRange; currentRow < (boxRow + 1) * boxRange; currentRow++)
                         {
-                            for (int c = boxCol * boxRange; c < (boxCol + 1) * boxRange; c++)
+                            for (int currentCol = boxCol * boxRange; currentCol < (boxCol + 1) * boxRange; currentCol++)
                             {
-                                if ((r != pairRow1 || c != pairCol1) && (r != pairRow2 || c != pairCol2))
+                                if ((currentRow != pairRow1 || currentCol != pairCol1) && (currentRow != pairRow2 || currentCol != pairCol2))
                                 {
-                                    board.Board[r, c].PossibleValues.Remove(candidate1);
-                                    board.Board[r, c].PossibleValues.Remove(candidate2);
+                                    board.Board[currentRow, currentCol].PossibleValues.Remove(candidate1);
+                                    board.Board[currentRow, currentCol].PossibleValues.Remove(candidate2);
                                     // In case that the optimiztation is done. else return false
                                     isDone = true; // the optimization has been done
                                 }
@@ -368,18 +371,18 @@ namespace Sudoku
                         // if a value was placed, continue iterating
                         isDeduced = false;
                     }
-                    //else if (ApplyHiddenSingle(board, row, col))
-                    //{
-                    //    isDeduced = false;
-                    //}
-                    else if (ApplyNakedPair(board,row,col))
+                    else if (ApplyHiddenSingle(board, row, col))
                     {
                         isDeduced = false;
                     }
-                    //else if (ApplyHiddenPair(board, row, col))
-                    //{
-                    //    isDeduced = false;
-                    //}
+                    else if (ApplyNakedPair(board, row, col))
+                    {
+                        isDeduced = false;
+                    }
+                    else if (ApplyHiddenPair(board, row, col))
+                    {
+                        isDeduced = false;
+                    }
                 }           
             }
             return isDeduced;
@@ -387,7 +390,85 @@ namespace Sudoku
 
         private static bool ApplyHiddenSingle(SudokuBoard board, int row, int col)
         {
-            throw new NotImplementedException();
+            bool isDone = false; // check if the optimization worked or not
+
+            // Iterate through all candidates)
+            for (int num = Utilities.minCellValue; num <= Utilities.maxCellValue; num++)
+            {
+                int count = 0;
+                int colIndex = -1;
+                // Iterate through all columns in the current row
+                for (int currentCol = 0; currentCol < Utilities.maxCellValue; currentCol++)
+                {
+                    // Check if the current cell has the current candidate
+                    if (board.Board[row, currentCol].PossibleValues.Contains(num))
+                    {
+                        count++;
+                        colIndex = currentCol;
+                    }
+                }
+                // If the current candidate is only found in one cell in the current row
+                if (count == 1)
+                {
+                    // Assign the candidate as the value of that cell
+                    board.Board[row, colIndex].Value = num;
+                    isDone = true;
+                }
+                
+
+                // Check columns
+                count = 0;
+                int rowIndex = -1;
+                // Iterate through all rows in the current column
+                for (int currentRow = 0; currentRow < Utilities.maxCellValue; currentRow++)
+                {
+                    // Check if the current cell has the current candidate
+                    if (board.Board[currentRow, col].PossibleValues.Contains(num))
+                    {
+                        count++;
+                        rowIndex = currentRow;
+                    }
+                }
+                // If the current candidate is only found in one cell in the current column
+                if (count == 1)
+                {
+                    // Assign the candidate as the value of that cell
+                    board.Board[rowIndex, col].Value = num;
+                    isDone = true;
+                }
+                
+
+                // check boxes    
+                int boxRange = (int)Math.Sqrt(Utilities.maxCellValue); // Calculate the indices of the box 
+
+                count = 0;
+                rowIndex = -1;
+                colIndex = -1;
+                int boxRow = row / boxRange;
+                int boxColumn = col / boxRange;
+                // Iterate through the elements in the box
+                for (int currentRow = boxRow * boxRange; currentRow < boxRow * boxRange + boxRange; currentRow++)
+                {
+                    for (int currentCol = boxColumn * boxRange; currentCol < boxColumn * boxRange + boxRange; currentCol++)
+                        if (board.Board[currentRow, currentCol].PossibleValues.Contains(num))
+                        {
+                            count++;
+                            rowIndex = currentRow;
+                            colIndex = currentCol;
+                        }
+               
+                }
+                // If the current candidate is only found in one cell in the current box
+                if (count == 1)
+                {
+                    // Assign the candidate as the value of that cell
+                    board.Board[rowIndex, colIndex].Value = num;
+                    isDone = true;
+                }
+                
+            }
+
+            return isDone;
         }
 
         private static bool ApplyNakedSingle(SudokuBoard board, int row, int col)
@@ -404,7 +485,7 @@ namespace Sudoku
         private static bool ApplyHiddenPair(SudokuBoard board, int row, int col)
         {
             // Apply hidden pair on the board
-            if (HiddenPairRow(board, row) || HiddenPairCol(board,col) || HiddenPairBox(board,row, col))
+            if (HiddenPairRow(board, row) || HiddenPairCol(board,col) /*|| HiddenPairBox(board,row, col)*/)
                 return true;
             return false;
         }

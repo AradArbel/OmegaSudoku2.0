@@ -28,9 +28,6 @@ namespace Sudoku
                     cell.RemovePossibility(value);
                 }
             }
-                                              
-            
-           
         }
 
         // Update possible values list for each cell of the board

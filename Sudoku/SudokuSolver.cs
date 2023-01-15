@@ -94,9 +94,6 @@ namespace Sudoku
             if (row == -1)
                 return true;
 
-            //CrookAlgorithm.RemoveUnpossibleValues(board.Board[row, col], board);
-            //CrookAlgorithm.RemoveValuesFromCells(board);
-
             // save possible values lists
             arrayOfPossibleLists = board.SavePossibleValues();
             ConstraintPropagation.DeducePuzzle(board,row,col); // Apply all constraint propagation optimizations until the board is fully optimize
@@ -118,15 +115,8 @@ namespace Sudoku
                     board.UpdateBoardData(copyString); // update values
                     //board.Board[row, col].Value = 0;
                     board.UpdatePossibleValuesLists(arrayOfPossibleLists); // update possible lists
-
-                    
-                    //board.Board = copyBoard.Board; // restore the board to its previous state
-
-                    //restore possible values for each cell
-                    //CrookAlgorithm.UpdatePossibleValues(board);
                 }
             }
-            //board.Board = copyBoard.Board; // restore the board to its previous state
             // No vaild value found -> puzzle cant be solved    
             return false;
         }

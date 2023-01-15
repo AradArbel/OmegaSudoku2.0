@@ -79,7 +79,7 @@ namespace Sudoku
                 }
             }
         }
-        // save every possible value list in the cell
+        // save every possible value list in the board
         public List<int>[] SavePossibleValues()
         {
             // Create an array of all possible values lists in the board
@@ -160,11 +160,6 @@ namespace Sudoku
         // Check legal string of the board output
         private void IsLegalBoardString(String boardData)
         {
-            // Check if the amount of values is equal to the board size
-            if (!Utilities.Legal_Sizes.Contains(boardData.Length))
-                throw new NotLegalDataSizeException("Error: The board size is ilegal. \n" +
-                    " Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
-
             // Check for every char in the string if it is in the legal items list.
             foreach (char value in boardData)
             {
@@ -172,6 +167,10 @@ namespace Sudoku
                     throw new NotLegalStringException("Error: The board data string has ilegal char in his string data.");
             }
 
+            // Check if the amount of values is equal to the board size
+            if (!Utilities.Legal_Sizes.Contains(boardData.Length))
+                throw new NotLegalDataSizeException("Error: The board size is ilegal. \n" +
+                    " Please insert a board whose size is one of the following sizes: 1X1, 4X4, 9X9, 16X16, 25X25");
         }
 
         // Print board
@@ -180,7 +179,7 @@ namespace Sudoku
             //Define box range
             int boxRange = (int)(Math.Sqrt(Utilities.maxCellValue));
 
-            bool twoDig = Utilities.maxCellValue > 9; // Check if board size is more then 9X9 (constain two digit numbers) 
+            bool twoDig = Utilities.maxCellValue > 9; // Check if board size is more then 9X9 (contain two digit numbers) 
 
             // Itrate throw every cell in the board and print is value;
             for (int row = 0; row < Utilities.maxCellValue; row++)
