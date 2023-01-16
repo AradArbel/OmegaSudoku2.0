@@ -9,6 +9,11 @@ using Microsoft.VisualBasic;
 
 namespace Sudoku
 {
+    /// <summary>
+    /// Crook algorithm is a technique used to solve Sudoku puzzles by searching for "crooks,"
+    /// which are pairs of cells that must contain the same value.
+    /// The algorithm involves checking each cell's possible values in the puzzle and modify them 
+    /// </summary>
     static class CrookAlgorithm
     {
         // Remove possible values that are already used in the row, column, and box from a cell
@@ -56,8 +61,11 @@ namespace Sudoku
         public static void UniqueCells(SudokuBoard board)
         {
             foreach (SudokuCell sudokuCell in board.Board)
-                if (sudokuCell.PossibleValues.Count == 1 )
+                if (sudokuCell.PossibleValues.Count == 1)
+                {
                     sudokuCell.Value = (sudokuCell.PossibleValues[0]);
+                    RemoveValuesFromCells(board);
+                }
         }
 
     }

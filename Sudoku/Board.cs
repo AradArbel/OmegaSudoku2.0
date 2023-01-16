@@ -54,14 +54,14 @@ namespace Sudoku
         //Convert Board To String Method
         public string ConvertBoardToString()
         {
-            //create a new StringBuilder object
+            //create a new String
             string boardData="";
             //loop through the rows and columns of the board
             for (int row = 0; row < Utilities.maxCellValue; row++)
             {
                 for (int col = 0; col < Utilities.maxCellValue; col++)
                 {
-                    //append the value of each cell to the StringBuilder object
+                    //append the value of each cell to the String
                     boardData += (this.board[row, col].Value);
                 }
             }
@@ -102,26 +102,6 @@ namespace Sudoku
                 cell.PossibleValues = arrayOfLists[listIndex];
                 listIndex++;
             }
-        }
-
-        //Clone Method
-        public SudokuBoard Clone()
-        {
-            // Copy the current string data
-            string currentBoardString = ConvertBoardToString();
-            //create a new instance of the SudokuBoard class
-            SudokuBoard clone = new(currentBoardString);
-            //loop through the rows and columns of the board
-            for (int row = 0; row < Utilities.maxCellValue; row++)
-            {
-                for (int col = 0; col < Utilities.maxCellValue; col++)
-                {
-                    //copy the values of each cell from the current board to the new board
-                    clone.board[row, col] = this.board[row, col];
-                }
-            }
-            //return the cloned board
-            return clone;
         }
 
 

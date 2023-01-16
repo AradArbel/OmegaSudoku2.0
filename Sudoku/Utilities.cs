@@ -9,10 +9,10 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Sudoku
 {
+    // Utilities class for all the utilities variables and functions in the project
     public static class Utilities
     {
-        // Utilities class for all the utilities variables and functions in the project
-
+   
         public static int maxCellValue;
         
         public const int minCellValue = 1;

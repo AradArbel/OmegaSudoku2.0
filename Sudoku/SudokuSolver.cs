@@ -95,8 +95,8 @@ namespace Sudoku
                 return true;
 
             // save possible values lists
-            arrayOfPossibleLists = board.SavePossibleValues();
-            ConstraintPropagation.DeducePuzzle(board,row,col); // Apply all constraint propagation optimizations until the board is fully optimize
+            //arrayOfPossibleLists = board.SavePossibleValues();
+            //ConstraintPropagation.DeducePuzzle(board,row,col); // Apply all constraint propagation optimizations until the board is fully optimize
 
 
             // itreate throw all possible values in each cell and try to set their possible values to specific location
@@ -108,13 +108,13 @@ namespace Sudoku
                     // create new copy of the data of the board before change it
                     copyString = board.ConvertBoardToString();
                     
-                    board.Board[row, col].Value = possibleValue;
+                    board.Board[row, col].Value = possibleValue; // try one of the possible values
                     if (BackTracking(board)) //recursively go for other rooms in the grid
                         return true;
                     //turn to unassigned space when conditions are not satisfied
-                    board.UpdateBoardData(copyString); // update values
-                    //board.Board[row, col].Value = 0;
-                    board.UpdatePossibleValuesLists(arrayOfPossibleLists); // update possible lists
+                    board.Board[row, col].Value = 0;
+                    //board.UpdateBoardData(copyString); // update values
+                    //board.UpdatePossibleValuesLists(arrayOfPossibleLists); // update possible lists
                 }
             }
             // No vaild value found -> puzzle cant be solved    
@@ -130,7 +130,9 @@ namespace Sudoku
             // Then sets all unique cell value - cell that have only one possible value
             CrookAlgorithm.UniqueCells(board);
 
-            //ConstraintPropagation.ApplyNakedPair(board);
+            // Apply all constraint propagation optimizations until the board is fully optimize
+            foreach(SudokuCell cell in board.Board)
+                ConstraintPropagation.DeducePuzzle(board, cell.Row, cell.Col); 
 
             // After that use backTracking algorithem in recursive way
             if (BackTracking(board))
